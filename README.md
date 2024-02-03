@@ -1,2 +1,2 @@
 # packet_sniffer
-A very simple packet sniffer made in C language for studying purposes
+A very simple packet sniffer made in python language for studying purposes
