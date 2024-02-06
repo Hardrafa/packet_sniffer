@@ -29,7 +29,6 @@ def main():
             print(f"      - Source address: {src_addr}")
             print(f"      - Destination address: {dest_addr}")
             print(f"      - Protocol: {protocol}")
-            print(separate)
 
         elif eth_type == 0x86DD:
             src_addr, dest_addr, protocol, ip_data = ipv6_unpack(eth_data)
@@ -37,16 +36,27 @@ def main():
             print(f"      - Source address: {src_addr}")
             print(f"      - Destination address: {dest_addr}")
             print(f"      - Protocol: {protocol}")
-            print(separate)
         
+        elif eth_type == 0x0806:
+            print("     ARP protocol.")
+
         else:
-            print("No Internet Protocol.")
-            print(separate)
+            print("Uncommon EtherType protocol.")
 
         # Checking payload
-        #if protocol == 
+        if protocol == 6:
+            src_port, dest_port, sqnc, ack, offset, urg_flag, ack_flag, psh_flag, rst_flag, syn_flag, fin_flag, tcp_data = tcp_unpack(ip_data)
+            print("         TCP Header:")
+            print(f"          - Source Port: {src_port}")
+            print(f"          - Destination Port: {dest_port}")
+            print(f"          - Sequence Number: {sqnc}")
+            print(f"          - Acknowledgement Number: {ack}")
+            print(f"          - Data Offset: {offset}")
+            print(f"          - URG: {urg_flag}, ACK: {ack_flag}, PSH: {psh_flag}, RST: {rst_flag}, SYN: {syn_flag}, FIN {fin_flag}.")
+
 
         
+        print(separate)
 
 # Unpack IPV4 packet
 def ipv4_unpack(data):
@@ -67,6 +77,22 @@ def ipv6_unpack(data):
     dest_addr = socket.inet_ntop(socket.AF_INET6, dest_addr)
  
     return src_addr, dest_addr, next_header, data[40:]
+
+# Unpack TCP segment
+def tcp_unpack(data):
+    tcp_header = data[:14]
+    src_port, dest_port, sqnc, ack, offset_reserved_flags = struct.unpack("!HHIIH", tcp_header)
+    offset = (offset_reserved_flags >> 12) * 4
+    urg_flag = (offset_reserved_flags & 0x0020) >> 5
+    ack_flag = (offset_reserved_flags & 0x0010) >> 4
+    psh_flag = (offset_reserved_flags & 0x0008) >> 3
+    rst_flag = (offset_reserved_flags & 0x0004) >> 2
+    syn_flag = (offset_reserved_flags & 0x0002) >> 1
+    fin_flag = (offset_reserved_flags & 0x0001)
+
+    return src_port, dest_port, sqnc, ack, offset, urg_flag, ack_flag, psh_flag, rst_flag, syn_flag, fin_flag, data[14:]
+
+
 
 if __name__ == "__main__":
     main()
