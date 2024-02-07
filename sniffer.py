@@ -38,24 +38,24 @@ def main():
             print(f"      - Protocol: {protocol}")
         
         elif eth_type == 0x0806:
-            # 254 is the value used for experimentation and testing as per RFC 3692
-            # It's this way so that an error in the subsequent if statements don't occur
-            protocol = 254 
+            protocol = None
             print("     ARP protocol.")
 
         else:
+            protocol = None
             print("Uncommon EtherType protocol.")
 
+
         # Checking payload
-        if protocol == 1:
+        if protocol == 1 or protocol == 58:
             icmp_type, icmp_code, checksum = icmp_unpack(ip_data)
+
             print("         ICMP Header:")
             print(f"          - Type: {icmp_type}")
             print(f"          - Code: {icmp_code}")
             print(f"          - Checksum: {checksum}")
 
-
-        if protocol == 6:
+        elif protocol == 6:
             src_port, dest_port, sqnc, ack, offset, urg_flag, ack_flag, psh_flag, rst_flag, syn_flag, fin_flag, tcp_data = tcp_unpack(ip_data)
             print("         TCP Header:")
             print(f"          - Source Port: {src_port}")
@@ -72,8 +72,11 @@ def main():
             print(f"          - Source Port: {src_port}")
             print(f"          - Destination Port: {dest_port}")
             
-        elif protocol != 254:
-            print("Uncommon 4th layer protocol or no protocol")
+        elif protocol == None:
+            print("         No IP protocol field value.")
+
+        else:
+            print("Uncommon 4th layer protocol or no protocol.")
         
         print(separate)
 
