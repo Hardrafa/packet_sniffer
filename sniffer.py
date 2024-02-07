@@ -54,7 +54,14 @@ def main():
             print(f"          - Data Offset: {offset}")
             print(f"          - URG: {urg_flag}, ACK: {ack_flag}, PSH: {psh_flag}, RST: {rst_flag}, SYN: {syn_flag}, FIN {fin_flag}.")
 
-
+        elif protocol == 17:
+            src_port, dest_port, udp_data = udp_unpack(ip_data)
+            print("         UDP Header:")
+            print(f"          - Source Port: {src_port}")
+            print(f"          - Destination Port: {dest_port}")
+            
+        else:
+            print("Uncommon 4th layer protocol or no protocol")
         
         print(separate)
 
@@ -91,6 +98,12 @@ def tcp_unpack(data):
     fin_flag = (offset_reserved_flags & 0x0001)
 
     return src_port, dest_port, sqnc, ack, offset, urg_flag, ack_flag, psh_flag, rst_flag, syn_flag, fin_flag, data[14:]
+
+def udp_unpack(data):
+    udp_header = data[:8]
+    src_port, dest_port, length, checksum = struct.unpack("!HHHH", udp_header)
+    
+    return src_port, dest_port, data[8:]
 
 
 
