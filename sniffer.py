@@ -38,12 +38,23 @@ def main():
             print(f"      - Protocol: {protocol}")
         
         elif eth_type == 0x0806:
+            # 254 is the value used for experimentation and testing as per RFC 3692
+            # It's this way so that an error in the subsequent if statements don't occur
+            protocol = 254 
             print("     ARP protocol.")
 
         else:
             print("Uncommon EtherType protocol.")
 
         # Checking payload
+        if protocol == 1:
+            icmp_type, icmp_code, checksum = icmp_unpack(ip_data)
+            print("         ICMP Header:")
+            print(f"          - Type: {icmp_type}")
+            print(f"          - Code: {icmp_code}")
+            print(f"          - Checksum: {checksum}")
+
+
         if protocol == 6:
             src_port, dest_port, sqnc, ack, offset, urg_flag, ack_flag, psh_flag, rst_flag, syn_flag, fin_flag, tcp_data = tcp_unpack(ip_data)
             print("         TCP Header:")
@@ -52,7 +63,8 @@ def main():
             print(f"          - Sequence Number: {sqnc}")
             print(f"          - Acknowledgement Number: {ack}")
             print(f"          - Data Offset: {offset}")
-            print(f"          - URG: {urg_flag}, ACK: {ack_flag}, PSH: {psh_flag}, RST: {rst_flag}, SYN: {syn_flag}, FIN {fin_flag}.")
+            print(f"          - URG: {urg_flag}, ACK: {ack_flag}, PSH: {psh_flag}.")
+            print(f"          - RST: {rst_flag}, SYN: {syn_flag}, FIN: {fin_flag}.")
 
         elif protocol == 17:
             src_port, dest_port, udp_data = udp_unpack(ip_data)
@@ -60,7 +72,7 @@ def main():
             print(f"          - Source Port: {src_port}")
             print(f"          - Destination Port: {dest_port}")
             
-        else:
+        elif protocol != 254:
             print("Uncommon 4th layer protocol or no protocol")
         
         print(separate)
@@ -85,6 +97,13 @@ def ipv6_unpack(data):
  
     return src_addr, dest_addr, next_header, data[40:]
 
+# Unpack ICMP message
+def icmp_unpack(data):
+    icmp_header = data[:4]
+    icmp_type, icmp_code, checksum = struct.unpack("!BBH", icmp_header)
+    
+    return icmp_type, icmp_code, checksum
+
 # Unpack TCP segment
 def tcp_unpack(data):
     tcp_header = data[:14]
@@ -99,6 +118,7 @@ def tcp_unpack(data):
 
     return src_port, dest_port, sqnc, ack, offset, urg_flag, ack_flag, psh_flag, rst_flag, syn_flag, fin_flag, data[14:]
 
+# Unpack UDP datagram
 def udp_unpack(data):
     udp_header = data[:8]
     src_port, dest_port, length, checksum = struct.unpack("!HHHH", udp_header)
