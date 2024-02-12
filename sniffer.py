@@ -58,9 +58,7 @@ def main():
 
 def eth_unpack(data):
     eth_header = data[:14]
-    eth_data = data[14:]
 
-    # Unpacking the ethernet header
     mac_dest, mac_src, eth_type = struct.unpack("!6s6sH", eth_header)
     print("Ethernet Header:")
     print(f" - Destination MAC address: {':'.join('%02x' % b for b in mac_dest)}")
