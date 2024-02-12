@@ -120,14 +120,14 @@ Also, don't forget to run it with root privileges.
 ## References
 Documents used in this project:
 
-https://docs.python.org/3/library/socket.html
-https://docs.python.org/3/library/struct.html
-https://docs.python.org/3/library/textwrap.html
-https://datatracker.ietf.org/doc/html/rfc0826
-https://datatracker.ietf.org/doc/html/rfc791
-https://datatracker.ietf.org/doc/html/rfc2460
-https://datatracker.ietf.org/doc/html/rfc792
-https://datatracker.ietf.org/doc/html/rfc793
+https://docs.python.org/3/library/socket.html \
+https://docs.python.org/3/library/struct.html \
+https://docs.python.org/3/library/textwrap.html \
+https://datatracker.ietf.org/doc/html/rfc0826 \
+https://datatracker.ietf.org/doc/html/rfc791 \
+https://datatracker.ietf.org/doc/html/rfc2460 \
+https://datatracker.ietf.org/doc/html/rfc792 \
+https://datatracker.ietf.org/doc/html/rfc793 \
 https://datatracker.ietf.org/doc/html/rfc768
 
 ## Demonstration
