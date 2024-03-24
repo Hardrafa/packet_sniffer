@@ -129,6 +129,3 @@ https://datatracker.ietf.org/doc/html/rfc2460 \
 https://datatracker.ietf.org/doc/html/rfc792 \
 https://datatracker.ietf.org/doc/html/rfc793 \
 https://datatracker.ietf.org/doc/html/rfc768
-
-## Demonstration
-(youtube video yet to be inserted)
